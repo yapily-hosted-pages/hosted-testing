@@ -30,7 +30,7 @@
         const country = countries[countryCode];
 
         const paymentLink = document.getElementById('payment-link');
-        paymentLink.href = `/yapily-hosted-testing/charities?country=${countryCode}`;
+        paymentLink.href = `/hosted-testing/charities?country=${countryCode}`;
 
         const dataLink = document.getElementById('data-link');
         dataLink.onclick = () => createDataRequest(country.request);
