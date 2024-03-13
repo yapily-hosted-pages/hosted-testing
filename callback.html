@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 10px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="app.js"></script>
+</head>
+
+<body class="flex flex-col items-center px-6 py-8">
+
+    <h1 id="message" class="text-3xl font-bold text-center"></h1>
+
+    <h2 id="details" class="text-2xl font-bold text-center mt-8 mb-3"></h2>
+
+    <table id="paramsTable">
+        <thead>
+            <tr>
+                <th>Key</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- URL parameters will be added here -->
+        </tbody>
+    </table>
+
+    <script>
+        // Function to get URL parameters
+        function getAllUrlParams(url) {
+            // Create an object to store the parameters
+            var params = {};
+
+            // Use the String object to slice off the first character of the search string (the ?)
+            var queryString = url ? url.split('?')[1] : window.location.search.slice(1);
+
+            // Split the query string into key/value pairs
+            if (queryString) {
+                queryString = queryString.split('#')[0];
+                var arr = queryString.split('&');
+
+                for (var i = 0; i < arr.length; i++) {
+                    // Separate the keys and the values
+                    var a = arr[i].split('=');
+
+                    // Set parameter name and value (use 'true' if empty)
+                    var paramName = a[0];
+                    var paramValue = typeof (a[1]) === 'undefined' ? true : a[1];
+
+                    // If parameter name already exists
+                    if (params[paramName]) {
+                        // Convert string to array - if only one entry, convert to array
+                        if (typeof params[paramName] === 'string') {
+                            params[paramName] = [params[paramName]];
+                        }
+                        // If a second entry for this parameter name, add it to the array
+                        params[paramName].push(paramValue);
+                    } else {
+                        // If param name doesn't exist yet, set it
+                        params[paramName] = paramValue;
+                    }
+                }
+            }
+
+            return params;
+        }
+
+        // Function to display the message and parameters
+        function displayMessageAndParams() {
+            var params = getAllUrlParams();
+            var messageDiv = document.getElementById('message');
+            var paramsTable = document.getElementById('paramsTable').getElementsByTagName('tbody')[0];
+
+            const { details, success, error } = countries[params.language].text;
+
+            document.getElementById('details').innerText = `${details} / Your payment details`
+
+            // Determine the message and style based on 'error' parameter
+            if (params.error) {
+                messageDiv.innerHTML = `<p class="error">${error} / Oops, something went wrong...</p>`;
+            } else {
+                messageDiv.innerHTML = `<p class="success">${success} / Thank you! Your payment was successful</p>`;
+            }
+
+            // Add the URL parameters to the table
+            for (var key in params) {
+                if (params.hasOwnProperty(key)) {
+                    var newRow = paramsTable.insertRow(paramsTable.rows.length);
+                    var newCell1 = newRow.insertCell(0);
+                    var newCell2 = newRow.insertCell(1);
+                    newCell1.textContent = key;
+                    newCell2.textContent = params[key];
+                }
+            }
+        }
+
+        // Run the function to update the page with the URL parameters
+        displayMessageAndParams();
+    </script>
+
+</body>
+
+</html>

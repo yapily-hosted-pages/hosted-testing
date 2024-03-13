@@ -1,0 +1,40 @@
+<html>
+
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="app.js"></script>
+</head>
+
+<body>
+    <div class="flex justify-center mt-8 gap-5">
+        <a id="payment-link">
+            <div class="border border-gray-300 rounded flex flex-col justify-center items-center gap-4"
+                style="height: 300px; width: 300px;">
+                <h3 class="font-semibold">Create Payment Request</h3>
+                <img src="payment.png" alt="payment" style="max-height: 200px; max-width: 200px;">
+            </div>
+        </a>
+        <div id="data-link"
+            class="border border-gray-300 rounded flex flex-col justify-center items-center gap-4 cursor-pointer"
+            style="height: 300px; width: 300px;">
+            <h3 class="font-semibold">Create Data Request</h3>
+            <img src="data.png" alt="payment" style="max-height: 200px; max-width: 200px;">
+        </div>
+    </div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const countryCode = params.get('country');
+
+        const country = countries[countryCode];
+
+        const paymentLink = document.getElementById('payment-link');
+        paymentLink.href = `/yapily-hosted-testing/charities?country=${countryCode}`;
+
+        const dataLink = document.getElementById('data-link');
+        dataLink.onclick = () => createDataRequest(country.request);
+    </script>
+</body>
+
+</html>
